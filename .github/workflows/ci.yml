@@ -16,20 +16,20 @@ jobs:
         if: success() || failure()
         run: |
           nix run nixpkgs#nixpkgs-fmt -- --check .
-      - name: Ensure evaluating DeterminateSystems/magic-nix-cache/=0.1.341 without output paths produces the right result
+      - name: Ensure evaluating DeterminateSystems/flake-checker/=0.1.19 without output paths produces the right result
         if: success() || failure()
         run: |
           nix eval --json \
-            --override-input flake https://flakehub.com/f/DeterminateSystems/magic-nix-cache/=0.1.341 \
+            --override-input flake https://flakehub.com/f/DeterminateSystems/flake-checker/=0.1.19 \
             --no-write-lock-file '.#contents.excludingOutputPaths' \
-            | nix run nixpkgs\#gron > corpus/DeterminateSystems/magic-nix-cache/=0.1.341/excluding.output
-          diff corpus/DeterminateSystems/magic-nix-cache/=0.1.341/excluding.expect corpus/DeterminateSystems/magic-nix-cache/=0.1.341/excluding.output
+            | nix run nixpkgs\#gron > corpus/DeterminateSystems/flake-checker/=0.1.19/excluding.output
+          diff corpus/DeterminateSystems/flake-checker/=0.1.19/excluding.expect corpus/DeterminateSystems/flake-checker/=0.1.19/excluding.output
 
-      - name: Ensure evaluating DeterminateSystems/magic-nix-cache/=0.1.341 with output paths produces the right result
+      - name: Ensure evaluating DeterminateSystems/flake-checker/=0.1.19 with output paths produces the right result
         if: success() || failure()
         run: |
           nix eval --json \
-              --override-input flake https://flakehub.com/f/DeterminateSystems/magic-nix-cache/=0.1.341 \
+              --override-input flake https://flakehub.com/f/DeterminateSystems/flake-checker/=0.1.19 \
               --no-write-lock-file '.#contents.includingOutputPaths' \
-              | nix run nixpkgs\#gron > corpus/DeterminateSystems/magic-nix-cache/=0.1.341/including.output
-          diff corpus/DeterminateSystems/magic-nix-cache/=0.1.341/including.expect corpus/DeterminateSystems/magic-nix-cache/=0.1.341/including.output
+              | nix run nixpkgs\#gron > corpus/DeterminateSystems/flake-checker/=0.1.19/including.output
+          diff corpus/DeterminateSystems/flake-checker/=0.1.19/including.expect corpus/DeterminateSystems/flake-checker/=0.1.19/including.output
