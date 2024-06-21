@@ -1,0 +1,35 @@
+name: "Test the inspector against a corpus"
+on:
+  push:
+  pull_request:
+jobs:
+  flakehub-publish:
+    runs-on: "ubuntu-latest"
+    permissions:
+      id-token: "write"
+      contents: "read"
+    steps:
+      - uses: "actions/checkout@v4"
+      - uses: "DeterminateSystems/nix-installer-action@main"
+      - uses: "DeterminateSystems/magic-nix-cache-action@main"
+      - name: Check formatting
+        if: success() || failure()
+        run: |
+          nix run nixpkgs#nixpkgs-fmt -- --check .
+      - name: Ensure evaluating DeterminateSystems/magic-nix-cache/=0.1.341 without output paths produces the right result
+        if: success() || failure()
+        run: |
+          nix eval --json \
+            --override-input flake https://flakehub.com/f/DeterminateSystems/magic-nix-cache/=0.1.341 \
+            --no-write-lock-file '.#contents.excludingOutputPaths' \
+            | nix run nixpkgs\#gron > corpus/DeterminateSystems/magic-nix-cache/=0.1.341/excluding.output
+          diff corpus/DeterminateSystems/magic-nix-cache/=0.1.341/excluding.expect corpus/DeterminateSystems/magic-nix-cache/=0.1.341/excluding.output
+
+      - name: Ensure evaluating DeterminateSystems/magic-nix-cache/=0.1.341 with output paths produces the right result
+        if: success() || failure()
+        run: |
+          nix eval --json \
+              --override-input flake https://flakehub.com/f/DeterminateSystems/magic-nix-cache/=0.1.341 \
+              --no-write-lock-file '.#contents.includingOutputPaths' \
+              | nix run nixpkgs\#gron > corpus/DeterminateSystems/magic-nix-cache/=0.1.341/including.output
+          diff corpus/DeterminateSystems/magic-nix-cache/=0.1.341/including.expect corpus/DeterminateSystems/magic-nix-cache/=0.1.341/including.output
