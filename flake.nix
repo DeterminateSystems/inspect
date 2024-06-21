@@ -132,10 +132,10 @@
           {
             children = {
               includingOutputPaths = {
-                what = "Discovered flake outputs which include metadata about derivations, outputs, and derivation output paths.";
+                shortDescription = "Discovered flake outputs which include metadata about derivations, outputs, and derivation output paths.";
               };
               excludingOutputPaths = {
-                what = "Discovered flake outputs which evaluates more quickly because it doesn't include metadata about derivations, outputs, and derivation output paths.";
+                shortDescription = "Discovered flake outputs which evaluates more quickly because it doesn't include metadata about derivations, outputs, and derivation output paths.";
               };
             };
           };
