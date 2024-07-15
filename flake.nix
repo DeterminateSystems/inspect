@@ -1,5 +1,9 @@
 {
+  # This input is overridden by flake-iter and other upstream tools
   inputs.flake.url = "https://flakehub.com/f/DeterminateSystems/flake-schemas/*";
+  # This input provides the default schemas
+  inputs.flake-schemas.url = "https://flakehub.com/f/DeterminateSystems/flake-schemas/*";
+
   outputs = inputs:
     let
       getFlakeOutputs = flake: includeOutputPaths:
@@ -18,7 +22,7 @@
         rec {
           allSchemas = (flake.outputs.schemas or defaultSchemas) // schemaOverrides;
 
-          defaultSchemas = (builtins.getFlake "${lock.nodes.flake.locked.url}?narHash=${lock.nodes.flake.locked.narHash}").schemas;
+          defaultSchemas = inputs.flake-schemas.outputs.schemas;
 
           # Ignore legacyPackages for now, since it's very big and throws uncatchable errors.
           schemaOverrides.legacyPackages = {
