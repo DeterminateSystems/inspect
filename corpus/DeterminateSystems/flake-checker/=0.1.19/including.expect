@@ -1,6 +1,6 @@
 json = {};
 json.docs = {};
-json.docs.devShells = "The `devShells` flake output contains derivations that provide a build environment for `nix develop`.\n";
+json.docs.devShells = "The `devShells` flake output contains derivations that provide a development environment for `nix develop`.\n";
 json.docs.packages = "The `packages` flake output contains packages that can be added to a shell using `nix shell`.\n";
 json.inventory = {};
 json.inventory.devShells = {};
