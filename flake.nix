@@ -12,6 +12,8 @@
             in if res.success then res.value else default;
 
           mkChildren = children: { inherit children; };
+
+          lock = builtins.fromJSON (builtins.readFile ./flake.lock);
         in
         rec {
           allSchemas = (flake.outputs.schemas or defaultSchemas) // schemaOverrides;
