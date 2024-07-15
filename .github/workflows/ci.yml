@@ -24,7 +24,7 @@ jobs:
           nix eval --json \
             --override-input flake https://flakehub.com/f/DeterminateSystems/flake-checker/=0.1.19 \
             --no-write-lock-file '.#contents.excludingOutputPaths' \
-            | nix run nixpkgs\#gron > corpus/DeterminateSystems/flake-checker/=0.1.19/excluding.output
+            | nix run nixpkgs#gron > corpus/DeterminateSystems/flake-checker/=0.1.19/excluding.output
           diff corpus/DeterminateSystems/flake-checker/=0.1.19/excluding.expect corpus/DeterminateSystems/flake-checker/=0.1.19/excluding.output
 
       - name: Ensure evaluating DeterminateSystems/fh/=0.1.12 without output paths produces the right result
@@ -33,14 +33,14 @@ jobs:
           nix eval --json \
             --override-input flake https://flakehub.com/f/DeterminateSystems/fh/=0.1.12 \
             --no-write-lock-file '.#contents.excludingOutputPaths' \
-            | nix run nixpkgs\#gron > corpus/DeterminateSystems/fh/=0.1.12/excluding.output
+            | nix run nixpkgs#gron > corpus/DeterminateSystems/fh/=0.1.12/excluding.output
           diff corpus/DeterminateSystems/fh/=0.1.12/excluding.expect corpus/DeterminateSystems/fh/=0.1.12/excluding.output
 
       - name: Ensure evaluating DeterminateSystems/fh/=0.1.12 with output paths produces the right result
         if: success() || failure()
         run: |
           nix eval --json \
-              --override-input flake https://flakehub.com/f/DeterminateSystems/fh/=0.1.12 \
-              --no-write-lock-file '.#contents.includingOutputPaths' \
-              | nix run nixpkgs\#gron > corpus/DeterminateSystems/fh/=0.1.12/including.output
+            --override-input flake https://flakehub.com/f/DeterminateSystems/fh/=0.1.12 \
+            --no-write-lock-file '.#contents.includingOutputPaths' \
+            | nix run nixpkgs#gron > corpus/DeterminateSystems/fh/=0.1.12/including.output
           diff corpus/DeterminateSystems/fh/=0.1.12/including.expect corpus/DeterminateSystems/fh/=0.1.12/including.output
