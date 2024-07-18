@@ -1,14 +1,12 @@
 {
-  # This input is overridden by flake-iter and other upstream tools
   inputs.flake.url = "https://flakehub.com/f/DeterminateSystems/flake-schemas/*";
-  # This input provides the default schemas
-  inputs.flake-schemas.url = "https://flakehub.com/f/DeterminateSystems/flake-schemas/*";
-
   outputs = inputs:
     let
       getFlakeOutputs = flake: includeOutputPaths:
         let
+
           # Helper functions.
+
           mapAttrsToList = f: attrs: map (name: f name attrs.${name}) (builtins.attrNames attrs);
 
           try = e: default:
@@ -17,12 +15,14 @@
 
           mkChildren = children: { inherit children; };
 
-          lock = builtins.fromJSON (builtins.readFile ./flake.lock);
         in
+
         rec {
+
           allSchemas = (flake.outputs.schemas or defaultSchemas) // schemaOverrides;
 
-          defaultSchemas = inputs.flake-schemas.outputs.schemas;
+          # FIXME: make this configurable
+          defaultSchemas = (builtins.getFlake "https://api.flakehub.com/f/pinned/DeterminateSystems/flake-schemas/0.1.2/018b3da8-4cc3-7fbb-8ff7-1588413c53e2/source.tar.gz?narHash=sha256-j8SR19V1SRysyJwpOBF4TLuAvAjF5t%2BgMiboN4gYQDU%3D").schemas;
 
           # Ignore legacyPackages for now, since it's very big and throws uncatchable errors.
           schemaOverrides.legacyPackages = {
