@@ -1,0 +1,25 @@
+{
+  "nodes": {
+    "flake": {
+      "locked": {
+        "lastModified": 1721786084,
+        "narHash": "sha256-efoDF3VaZHpcwFd2Y1axGLqNX/ou9kDL7z9mWNqzv9w=",
+        "rev": "fa4dcab2993795df7ab5fe3f1af40e496ebba82d",
+        "revCount": 72,
+        "type": "tarball",
+        "url": "https://api.flakehub.com/f/pinned/DeterminateSystems/flake-schemas/0.1.4/0190e653-dd76-70bd-ba6e-a3f5eaf3d415/source.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://flakehub.com/f/DeterminateSystems/flake-schemas/%2A"
+      }
+    },
+    "root": {
+      "inputs": {
+        "flake": "flake"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
