@@ -15,6 +15,7 @@
 
           mkChildren = children: { inherit children; };
 
+          flakeSchemasFlakePinned = "https://api.flakehub.com/f/pinned/DeterminateSystems/flake-schemas/0.1.4/0190e653-dd76-70bd-ba6e-a3f5eaf3d415/source.tar.gz?narHash=sha256-efoDF3VaZHpcwFd2Y1axGLqNX/ou9kDL7z9mWNqzv9w%3D";
         in
 
         rec {
@@ -22,7 +23,7 @@
           allSchemas = (flake.outputs.schemas or defaultSchemas) // schemaOverrides;
 
           # FIXME: make this configurable
-          defaultSchemas = (builtins.getFlake "https://api.flakehub.com/f/pinned/DeterminateSystems/flake-schemas/0.1.3/0190b841-54d3-7b7a-8550-24942bc38caf/source.tar.gz?narHash=sha256-c2AZH9cOnSpPXV8Lwy19%2FI8EgW7G%2BE%2BZh6YQBZZwzxI%3D").schemas;
+          defaultSchemas = (builtins.getFlake flakeSchemasFlakePinned).schemas;
 
           # Ignore legacyPackages for now, since it's very big and throws uncatchable errors.
           schemaOverrides.legacyPackages = {
