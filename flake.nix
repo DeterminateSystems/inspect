@@ -1,5 +1,8 @@
 {
-  inputs.flake.url = "https://flakehub.com/f/DeterminateSystems/flake-schemas/*";
+  inputs = {
+    flake.url = "https://flakehub.com/f/DeterminateSystems/flake-schemas/*";
+    flake-schemas.url = "https://flakehub.com/f/DeterminateSystems/flake-schemas/*";
+  };
   outputs = inputs:
     let
       getFlakeOutputs = flake: includeOutputPaths:
@@ -14,16 +17,13 @@
             in if res.success then res.value else default;
 
           mkChildren = children: { inherit children; };
-
-          flakeSchemasFlakePinned = "https://api.flakehub.com/f/pinned/DeterminateSystems/flake-schemas/0.1.4/0190e653-dd76-70bd-ba6e-a3f5eaf3d415/source.tar.gz?narHash=sha256-efoDF3VaZHpcwFd2Y1axGLqNX/ou9kDL7z9mWNqzv9w%3D";
         in
 
         rec {
 
           allSchemas = (flake.outputs.schemas or defaultSchemas) // schemaOverrides;
 
-          # FIXME: make this configurable
-          defaultSchemas = (builtins.getFlake flakeSchemasFlakePinned).schemas;
+          defaultSchemas = inputs.flake-schemas.schemas;
 
           # Ignore legacyPackages for now, since it's very big and throws uncatchable errors.
           schemaOverrides.legacyPackages = {
