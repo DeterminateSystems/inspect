@@ -1,5 +1,6 @@
 {
   inputs.flake.url = "https://flakehub.com/f/DeterminateSystems/flake-schemas/*";
+
   outputs = inputs:
     let
       getFlakeOutputs = flake: includeOutputPaths:
@@ -9,13 +10,24 @@
 
           mapAttrsToList = f: attrs: map (name: f name attrs.${name}) (builtins.attrNames attrs);
 
+          getAttrFromPath = paths: obj:
+            let
+              length = builtins.length paths - 1;
+
+              go = acc: index:
+                if index > length
+                then acc
+                else go acc.${builtins.elemAt paths index} (index + 1);
+            in
+            go obj 0;
+
           try = e: default:
             let res = builtins.tryEval e;
             in if res.success then res.value else default;
 
           mkChildren = children: { inherit children; };
 
-          flakeSchemasFlakePinned = "https://api.flakehub.com/f/pinned/DeterminateSystems/flake-schemas/0.1.4/0190e653-dd76-70bd-ba6e-a3f5eaf3d415/source.tar.gz?narHash=sha256-efoDF3VaZHpcwFd2Y1axGLqNX/ou9kDL7z9mWNqzv9w%3D";
+          flakeSchemasFlakePinned = "https://api.flakehub.com/f/pinned/DeterminateSystems/flake-schemas/0.3.0/019c9f61-e746-760e-a1fe-53f05b10d026/source.tar.gz?narHash=sha256-hcUPpu25%2BVLvQsf961cu4zTeA//Ab35MaMjqSS/Ojqc%3D";
         in
 
         rec {
@@ -52,45 +64,51 @@
           uncheckedOutputs =
             builtins.filter (outputName: ! schemas ? ${outputName}) (builtins.attrNames flake.outputs);
 
-          inventoryFor = filterFun:
+          inventoryFor =
+            filterFun:
             builtins.mapAttrs
-              (outputName: schema:
+              (
+                outputName: schema:
                 let
-                  doFilter = attrs:
-                    if filterFun attrs
-                    then
-                      if attrs ? children
-                      then
-                        mkChildren (builtins.mapAttrs (childName: child: doFilter child) attrs.children)
+                  doFilter =
+                    attrs: output:
+                    if filterFun attrs then
+                      if attrs ? children then
+                        mkChildren
+                          (
+                            builtins.mapAttrs (childName: child: doFilter child output.${childName}) attrs.children
+                          )
                       else
                         {
                           forSystems = attrs.forSystems or null;
                           shortDescription = attrs.shortDescription or null;
                           what = attrs.what or null;
-                          #evalChecks = attrs.evalChecks or {};
-                        } // (
-                          if includeOutputPaths then
-                            {
-                              derivation =
-                                if attrs ? derivation
-                                then builtins.unsafeDiscardStringContext attrs.derivation.drvPath
+                        }
+                        // (
+                          if
+                            includeOutputPaths then
+                            let
+                              drv =
+                                if attrs?derivationAttrPath
+                                then getAttrFromPath attrs.derivationAttrPath output
+                                # TODO: remove when no longer needed
+                                else if attrs?derivation
+                                then attrs.derivation
                                 else null;
+                            in
+                            {
+                              derivation = if drv != null then drv.drvPath else null;
                               outputs =
-                                if attrs ? derivation
-                                then
+                                if drv != null then
                                   builtins.listToAttrs
                                     (
                                       builtins.map
-                                        (outputName:
-                                          {
-                                            name = outputName;
-                                            value = attrs.derivation.${outputName}.outPath;
-                                          }
-                                        )
-                                        attrs.derivation.outputs
-                                    )
-                                else
-                                  null;
+                                        (outputName: {
+                                          name = outputName;
+                                          value = drv.${outputName}.outPath;
+                                        })
+                                        drv.outputs
+                                    ) else null;
                             }
                           else
                             { }
@@ -98,7 +116,12 @@
                     else
                       { };
                 in
-                doFilter ((schema.inventory or (output: { })) flake.outputs.${outputName})
+                doFilter
+                  ((schema.inventory or (output: { }))
+                    flake.outputs.${outputName}
+                  )
+                  flake.outputs.${outputName}
+
               )
               schemas;
 
