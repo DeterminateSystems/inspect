@@ -100,7 +100,7 @@
                                 else null;
                             in
                             {
-                              derivation = if drv != null then drv.drvPath else null;
+                              derivation = if drv != null then builtins.unsafeDiscardStringContext drv.drvPath else null;
                               outputs =
                                 if drv != null then
                                   builtins.listToAttrs
