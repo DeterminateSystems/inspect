@@ -1,0 +1,17 @@
+json = {};
+json.docs = {};
+json.docs.bySystem = "The `bySystem` flake output defines a per-system output, like a flake's `formatter`.\n";
+json.inventory = {};
+json.inventory.bySystem = {};
+json.inventory.bySystem.children = {};
+json.inventory.bySystem.children["aarch64-darwin"] = {};
+json.inventory.bySystem.children["aarch64-darwin"].forSystems = [];
+json.inventory.bySystem.children["aarch64-darwin"].forSystems[0] = "aarch64-darwin";
+json.inventory.bySystem.children["aarch64-darwin"].shortDescription = "";
+json.inventory.bySystem.children["aarch64-darwin"].what = "bySystem";
+json.inventory.bySystem.children["x86_64-linux"] = {};
+json.inventory.bySystem.children["x86_64-linux"].forSystems = [];
+json.inventory.bySystem.children["x86_64-linux"].forSystems[0] = "x86_64-linux";
+json.inventory.bySystem.children["x86_64-linux"].shortDescription = "";
+json.inventory.bySystem.children["x86_64-linux"].what = "bySystem";
+json.version = 1;
