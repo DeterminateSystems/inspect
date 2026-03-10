@@ -50,3 +50,39 @@ jobs:
               --no-write-lock-file '.#contents.includingOutputPaths' \
               | nix run nixpkgs\#gron > corpus/DeterminateSystems/fh/=0.1.12/including.output
           diff corpus/DeterminateSystems/fh/=0.1.12/including.expect corpus/DeterminateSystems/fh/=0.1.12/including.output
+
+      - name: Ensure evaluating tests/bySystem/0.1.4 without output paths produces the right result
+        if: success() || failure()
+        run: |
+          nix eval --json \
+              --override-input flake ./tests/bySystem/0.1.4 \
+              --no-write-lock-file '.#contents.excludingOutputPaths' \
+              | nix run nixpkgs\#gron > corpus/tests/bySystem/0.1.4/excluding.output
+          diff corpus/tests/bySystem/0.1.4/excluding.expect corpus/tests/bySystem/0.1.4/excluding.output
+
+      - name: Ensure evaluating tests/bySystem/0.1.4 with output paths produces the right result
+        if: success() || failure()
+        run: |
+          nix eval --json \
+              --override-input flake ./tests/bySystem/0.1.4 \
+              --no-write-lock-file '.#contents.includingOutputPaths' \
+              | nix run nixpkgs\#gron > corpus/tests/bySystem/0.1.4/including.output
+          diff corpus/tests/bySystem/0.1.4/including.expect corpus/tests/bySystem/0.1.4/including.output
+
+      - name: Ensure evaluating tests/bySystem/0.3.0 without output paths produces the right result
+        if: success() || failure()
+        run: |
+          nix eval --json \
+              --override-input flake ./tests/bySystem/0.3.0 \
+              --no-write-lock-file '.#contents.excludingOutputPaths' \
+              | nix run nixpkgs\#gron > corpus/tests/bySystem/0.3.0/excluding.output
+          diff corpus/tests/bySystem/0.3.0/excluding.expect corpus/tests/bySystem/0.3.0/excluding.output
+
+      - name: Ensure evaluating tests/bySystem/0.3.0 with output paths produces the right result
+        if: success() || failure()
+        run: |
+          nix eval --json \
+              --override-input flake ./tests/bySystem/0.3.0 \
+              --no-write-lock-file '.#contents.includingOutputPaths' \
+              | nix run nixpkgs\#gron > corpus/tests/bySystem/0.3.0/including.output
+          diff corpus/tests/bySystem/0.3.0/including.expect corpus/tests/bySystem/0.3.0/including.output
