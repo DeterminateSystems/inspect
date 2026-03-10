@@ -91,7 +91,10 @@
                               drv =
                                 if attrs?derivationAttrPath
                                 then getAttrFromPath attrs.derivationAttrPath output
-                                # TODO: remove when no longer needed
+                                # TODO: This is a fallback for legacy behavior.
+                                # Remove when most (or all) flake schemas in the
+                                # wild use derivationAttrPath instead of
+                                # derivation.
                                 else if attrs?derivation
                                 then attrs.derivation
                                 else null;
