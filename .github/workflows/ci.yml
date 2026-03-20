@@ -86,3 +86,21 @@ jobs:
               --no-write-lock-file '.#contents.includingOutputPaths' \
               | nix run nixpkgs\#gron > corpus/tests/bySystem/0.3.0/including.output
           diff corpus/tests/bySystem/0.3.0/including.expect corpus/tests/bySystem/0.3.0/including.output
+
+      - name: Ensure evaluating tests/noOutputs without output paths produces the right result
+        if: success() || failure()
+        run: |
+          nix eval --json \
+              --override-input flake ./tests/noOutputs \
+              --no-write-lock-file '.#contents.excludingOutputPaths' \
+              | nix run nixpkgs\#gron > corpus/tests/noOutputs/excluding.output
+          diff corpus/tests/noOutputs/excluding.expect corpus/tests/noOutputs/excluding.output
+
+      - name: Ensure evaluating tests/noOutputs with output paths produces the right result
+        if: success() || failure()
+        run: |
+          nix eval --json \
+              --override-input flake ./tests/noOutputs \
+              --no-write-lock-file '.#contents.includingOutputPaths' \
+              | nix run nixpkgs\#gron > corpus/tests/noOutputs/including.output
+          diff corpus/tests/noOutputs/including.expect corpus/tests/noOutputs/including.output
