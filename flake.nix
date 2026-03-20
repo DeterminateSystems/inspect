@@ -110,7 +110,7 @@
                                           name = outputName;
                                           value = drv.${outputName}.outPath;
                                         })
-                                        drv.outputs
+                                        (drv.outputs or [ "out" ])
                                     ) else null;
                             }
                           else
